@@ -116,7 +116,7 @@ func writeDefaultConfig() error {
   ],
   "system": {
     "logDestination": "file",
-	"taskInterval": "5m"
+    "taskInterval": "5m"
   },
   "server": {
     "Port": ":8088"
@@ -198,6 +198,19 @@ func validateConfig() bool {
 		fmt.Fprintf(os.Stderr, "读取配置文件失败: %v\n", errMsg)
 		fmt.Fprintf(os.Stderr, "请修正配置问题后重新启动服务\n")
 
+		return true
+	}
+
+	// 检查PV过滤器配置
+	if len(cfg.PVFilter.StatusCodeInclude) == 0 {
+		fmt.Fprintf(os.Stderr, "配置文件错误: pvFilter.statusCodeInclude 不能为空\n")
+		fmt.Fprintf(os.Stderr, "请修正配置问题后重新启动服务\n")
+		return true
+	}
+
+	if len(cfg.PVFilter.ExcludePatterns) == 0 {
+		fmt.Fprintf(os.Stderr, "配置文件错误: pvFilter.excludePatterns 不能为空\n")
+		fmt.Fprintf(os.Stderr, "请修正配置问题后重新启动服务\n")
 		return true
 	}
 
